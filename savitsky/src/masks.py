@@ -15,3 +15,5 @@ def get_mask_account(account_number: Union[str]) -> str:
 
 
 print(get_mask_account("64686473678894779589"))
+print(get_mask_account("64686473678894722589"))
+
