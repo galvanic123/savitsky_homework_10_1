@@ -20,11 +20,13 @@ def filter_by_state(list_of_dict: list[dict[str, Any]],
 
 
 def sort_by_date(list_of_dict: list[dict[str, Any]],
-                 revers: bool = True) -> list[dict[str, Any]]:
+                 revers: bool = True) -> list[dict[str, Any]] :
     """Сортируем список словарей по убыванию по дате"""
+    
     sorted_state = sorted(
         list_of_dict,
         key=lambda x : x["date"],
         reverse=revers
     )
+
     return sorted_state
