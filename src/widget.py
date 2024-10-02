@@ -4,7 +4,7 @@ def mask_account_card(values: str) -> str:
     bill_info = values.split()
     number = bill_info[-1]
     if len(number) == 16:
-        result = f"{number[:4]}{number[4:6]}** **** {number[12:]}"
+        result = f"{number[:4]} {number[4:6]}** **** {number[12:]}"
     elif len(number) == 20:
         result = f"**{number[-4:]}"
     return f"{values.split()[0]} {result}"
