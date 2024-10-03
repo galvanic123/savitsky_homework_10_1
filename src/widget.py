@@ -1,13 +1,20 @@
+from src.masks import get_mask_account, get_mask_card_number
+
+
 def mask_account_card(values: str) -> str:
     """Функция, которая обрабатывает информацию о картах и счетах"""
-
-    bill_info = values.split()
-    number = bill_info[-1]
-    if len(number) == 16:
-        result = f"{number[:4]} {number[4:6]}** **** {number[12:]}"
-    elif len(number) == 20:
-        result = f"**{number[-4:]}"
-    return f"{values.split()[0]} {result}"
+    account_type_card_num_list = values.split(" ")
+    if len(account_type_card_num_list[-1]) < 20 and len(values) > 16:
+        mask_card_number = get_mask_card_number(account_type_card_num_list[-1])
+        account_type_card_num_list[-1] = mask_card_number
+        if mask_card_number == 'неверный ввод':
+            return "неверный ввод данных"
+        return " ".join(account_type_card_num_list)
+    if len(account_type_card_num_list[-1]) == 20 and len(values) == 25:
+        mask_account = get_mask_account(account_type_card_num_list[-1])
+        account_type_card_num_list[-1] = mask_account
+        return " ".join(account_type_card_num_list)
+    return "неверный ввод данных"
 
 
 print(mask_account_card("Maestro 1596837868705199"))
