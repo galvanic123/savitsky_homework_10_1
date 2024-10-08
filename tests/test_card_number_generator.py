@@ -1,11 +1,8 @@
 import pytest
 
 from src.generators import card_number_generator
-from tests.conftest import (
-    card_number_generator_exp_result_0_5,
-    card_number_generator_exp_result_1_5,
-    card_number_generator_exp_result_2_2050,
-)
+from tests.conftest import (card_number_generator_exp_result_0_5, card_number_generator_exp_result_1_5,
+                            card_number_generator_exp_result_2_2050)
 
 """Параметризация для card_number_generator"""
 
