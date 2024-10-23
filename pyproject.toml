@@ -13,6 +13,7 @@ isort = "^5.13.2"
 flake8 = "^7.1.1"
 mypy = "^1.11.2"
 black = "^24.8.0"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.lint.dependencies]
 flake8 = "^7.1.1"
