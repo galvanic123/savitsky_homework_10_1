@@ -8,7 +8,7 @@ API_KEY = os.getenv("API_KEY")
 API_URL = "https://api.apilayer.com/exchangerates_data/convert?to={to}&from={from_}&amount={amount}"
 
 
-def get_rub_amount(transactions: dict): # type: ignore[no-untyped-def]
+def get_rub_amount(transactions: dict):            # type: ignore[no-untyped-def]
     """Конвертирует валюту через API и возвращает его в виде float в рублях"""
     currency = transactions.get("operationAmount", {}).get("currency", {}).get("code")
     amount = transactions.get("operationAmount", {}).get("amount")
