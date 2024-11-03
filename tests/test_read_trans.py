@@ -7,7 +7,7 @@ from src.read_transactions import read_csv_transactions, read_xlsx_transactions
 
 
 class TestReadCsvTransactions(unittest.TestCase):
-    def test_read_csv_transactions(self) -> None:
+    def test_read_csv_transactions(self):        # type: ignore[no-untyped-def]
         # создаем mock для файла CSV
         mock_file_content = """id;state;date;amount;currency_name;currency_code;description;from;to
 1;success;2022-01-01;100.0;USD;USD;transfer;account1;account2
@@ -44,7 +44,7 @@ class TestReadCsvTransactions(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
 
-def test_read_xlsx_transactions() -> None:
+def test_read_xlsx_transactions():               # type: ignore[no-untyped-def]
     file_name = "test.xlsx"
     data = {
         "id": [1, 2],

@@ -1,62 +1,60 @@
-import tempfile
+import os
+
+import pytest
 
 from src.decorators import log
 
-# Тестируемая функция
-# noinspection SpellCheckingInspection
+
+def test_log_file():              # type: ignore[no-untyped-def]
+    @log(filename="mylog.txt")
+    def function(x, y):             # type: ignore[no-untyped-def]
+        return x * y
+
+    function(5, 2)
+    with open(os.path.join(r"logs", "mylog.txt"), "rt") as file:
+        for line in file:
+            log_str = line
+
+    assert log_str == "function ok\n"
 
 
-def test_log_good(capsys):  # type: ignore[no-untyped-def]
-    """Тестирует выполнение декорированной функции"""
-
-    @log()
-    def func(x, y):  # type: ignore[no-untyped-def]
-        return x + y
-
-    result = func(1, 2)
-    assert result == 3
-
-
-# noinspection SpellCheckingInspection
-def test_log_good_file_log(capsys):  # type: ignore[no-untyped-def]
-    """Тестирует запись в файл после успешного выполнения"""
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        log_file_path = tmp_file.name
-
-    @log(filename=log_file_path)
-    def func(x, y):  # type: ignore[no-untyped-def]
-        return x + y
-
-    func(1, 2)
-    with open(log_file_path, "r", encoding="utf-8") as file:
-        logs = file.read()
-    assert "func ok\n" in logs
-
-
-# noinspection SpellCheckingInspection
-def test_log_exception(capsys):  # type: ignore[no-untyped-def]
-    """Тестирует вывод после ошибки в консоль"""
+def test_log_console(capsys):              # type: ignore[no-untyped-def]
 
     @log()
-    def func(x, y):  # type: ignore[no-untyped-def]
-        return x + y
+    def function(x, y):          # type: ignore[no-untyped-def]
+        return x * y
 
-    func(1, 2)
+    result = function(5, 2)
     captured = capsys.readouterr()
-    assert "func ok\n\n" in captured.out
+
+    assert captured.out == "function ok\n"
+    assert result == 10
 
 
-# noinspection SpellCheckingInspection
-def test_log_exception_file_log(capsys):  # type: ignore[no-untyped-def]
-    """Тестирует запись в файл после ошибки"""
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        log_file_path = tmp_file.name
+def test_log_file_error():              # type: ignore[no-untyped-def]               # type: ignore[no-untyped-def]
+    @log(filename="mylog.txt")
+    def function(x, y):          # type: ignore[no-untyped-def]
+        raise TypeError("division by zero")
 
-    @log(filename=log_file_path)
-    def func(x, y):  # type: ignore[no-untyped-def]
-        return x + y
+    with pytest.raises(TypeError, match="division by zero"):
+        function(5, 0)
 
-    func(1, 2)
-    with open(log_file_path, "r", encoding="utf-8") as file:
-        logs = file.read()
-    assert "func ok\n" in logs
+    with open(os.path.join(r"logs", "mylog.txt"), "rt") as file:
+        for line in file:
+            log_str = line
+
+    assert log_str == "function error: division by zero. Inputs: (5, 0), {}\n"
+
+
+def test_log_console_error(capsys):                       # type: ignore[no-untyped-def]
+
+    @log()
+    def function(x, y):               # type: ignore[no-untyped-def]
+        raise ValueError("division by zero")
+
+    with pytest.raises(ValueError, match="division by zero"):
+        function(5, 0)
+
+    captured = capsys.readouterr()
+
+    assert captured.out == "function error: division by zero. Inputs: (5, 0), {}\n"

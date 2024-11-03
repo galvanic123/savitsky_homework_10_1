@@ -1,33 +1,24 @@
+import json
 import os
+from typing import Any
 
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+
 API_KEY = os.getenv("API_KEY")
-API_URL = "https://api.apilayer.com/exchangerates_data/convert?to={to}&from={from_}&amount={amount}"
 
 
-def get_rub_amount(transactions: dict):            # type: ignore[no-untyped-def]
-    """Конвертирует валюту через API и возвращает его в виде float в рублях"""
-    currency = transactions.get("operationAmount", {}).get("currency", {}).get("code")
-    amount = transactions.get("operationAmount", {}).get("amount")
+def currency_conversion(currency: str, sum_transaction: float) -> Any:
+    """Конвертирует валюту через API и возвращает его в виде float"""
 
-    if currency == "RUB":
-        return amount
-    elif currency in ["USD", "EUR"]:
-        try:
-            response = requests.get(
-                API_URL.format(to="RUB", from_=currency, amount=amount), headers={"apikey": API_KEY}
-            )
-            if response.status_code == 200:
-                data = response.json()
-                return data["result"]
-            else:
-                print(f"Ошибка при конвертации валюты: {response.status_code}")
-                return 0.0
-        except requests.exceptions.RequestException as e:
-            print(f"Ошибка при конвертации валюты: {e}")
-            return 0.0
-    else:
-        return 0.0
+    url = f"https://api.apilayer.com/exchangerates_data/convert?to={'RUB'}&from={currency}&amount={sum_transaction}"
+    try:
+        response = requests.get(url, headers={"apikey": API_KEY})
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        return 0.00
+
+    response_data = json.loads(response.text)
+    return round(response_data["result"], 2)
