@@ -1,0 +1,5 @@
+function ok
+function
+ error: division by zero. Input: (5, 0), {}function ok
+function
+ error: division by zero. Input: (5, 0), {}
